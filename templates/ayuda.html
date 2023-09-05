@@ -1,0 +1,19 @@
+﻿<html><body> <dl><h1><b>Hola, me llamo Francisco y os doy la bienvenida a uno de mis proyectos.</b></h1>
+		<p></p>
+		
+		<h3><i>En que se basa su funcionamiento?</i></h3><p>En este proyecto se realiza un previsión meteorológica basada en un análisis probabilístico por semejanza entre series históricas de las capturas de la reflectividad en los radares de la red nacional de radares meteorológicos de AEMET.</p>
+		<p>Para ello utiliza como muestra a comparar la serie actual y las series antiguas, el algoritmo busca entre el almacenamiento de imágenes todas las series antiguas de la misma longitud que la serie actual, las compara entre ellas y establece que serie pasada es mas similar a la serie actual, en función a eso, se deduce que, cuanta mas semejanza exista en la situación actual con alguna situación pasada, mas semejanza habrá entre las series posteriores a ambas series, por lo que, se algún modo, puede servir como previsión.</p>
+		<p></p>
+		<h3><i>Cuales son sus limitaciones?</i></h3>
+		<p>La previsión arrojada depende en gran medida por la longitud de la serie histórica disponible, de la longitud de la serie a comparar, de la cantidad de puntos de control de la imagen, y de el factor caos implícito en las dinámicas meteorológicas, por lo que, la previsión, será menos fiable cuanto mas larga sea la predicción y cuanto mas alejada del inicio de la serie de predicción mostrada, la serie de imágenes almacenada empieza en Septiembre del 2023, por lo que, los primeros meses y sobretodo ante situaciones sinópticas poco frecuentes, la serie mas similar a la serie actual guardaran un grado de semejanza muy bajo, por lo que la predicción tendrá poca semejanza con la situación real futura.</p>
+		<p></p>
+		<h3><b><i>Como funciona?</i></b></h3>
+		<p>Existen tres módulos diferenciados: </p>
+		<ol><li>La adquisición de imagenes, su procesameinto y la subida de imágenes al almacenamiento.</li>
+			<li>El algoritmo de comparación y extracción de grado de semejanza de entre la serie actual y el histórico de series.</li>
+			<li>El servidor web que proporciona la visualización y el manejo de información al usuario.</li>
+			</ol>
+		<p>Tanto el punto 1 como el 2 se trata de microservicios alojados en AWS Lambda, estos están programados temporalmente justo a la actualización de las imagenes de radar, el módulo 1 adquiere las imágenes mediante un API que proporciona AEMET, realiza una copia de la imagen suministrada y a continuación la procesa a una imagen en escala de grises donde, el valor de blanco del pixel es coincidente con el valor de reflectividad de la escala mostrada en la leyenda de dicha imagen, se realiza una segunda copia redimensionada, la dimensión de la imagen a procesar es un modo visual y sencillo de reducir los puntos de control y que estos adquieran un area mayor, simplificando el proceso y tambien agilizando el procesamiento, finalmente las imágenes son subidas a un servicio de AWS S3.</p>
+		<p></p>
+		<p>&nbsp;El servicio funciona mediante los siguientes endpoints:</p><table><tbody><tr><td>/prevision<br/></td><td>Arroja 6 imágenes consecutivas, pertenecientes a las 6 imágenes posteriores a la serie histórica de 3 imágenes mas similar.</td></tr><tr><td>/serie_actual<br/></td><td>Arroja la serie de 3 últimas imágenes capturadas por el radar (serie actual).</td></tr><tr><td>/serie_antigua<br/></td><td>Arroja la serie de 3 imágenes capturadas por el radar con mas semejanza a la serie actual.</td></tr><tr><td>/historico_disponible<br/></td><td>Arroja la lista de todas las imágenes almacenadas.</td></tr><tr><td>/historico<br/></td><td>Necesita&nbsp;por parámetro una imagen de la lista de imágenes almacenadas, esta se muestra en pantalla (ejemplo: /historico?date=Valencia_2023-09-15-14-32.png) (formato de fecha:&nbsp;Región_año-mes-dia-hora-minutos)</td></tr><tr><td>/<br/></td><td>Breve descripción de endpoints y funcionamiento de la página.</td></tr></tbody></table>
+<p></p></dl></body></html>
